@@ -30,10 +30,7 @@ Example:
 			return
 		}
 
-		input := ""                                                                                                 //keyboard input value
-		fmt.Printf("SecurityGroup   %s   will be DESTROY, are you sure? (CAN NOT RESTORE) Y/N\n", listFlag.GroupId) //destroy warning
-		fmt.Scanln(&input)                                                                                          //stdin
-		if (input == "Y") || (input == "y") {                                                                       //input Y or y
+		if listFlag.Force { //if there is enabled force option, dont confirmation
 			regionsAWS := getAWSRegions() //get region list (AWS)
 			for _, region := range regionsAWS {
 				wg.Add(1) //waiting group count up
@@ -41,9 +38,22 @@ Example:
 				time.Sleep(1 * time.Millisecond)
 			}
 			wg.Wait() //wait for end of parallel processing
-		} else { //not Y or y, exit
-			fmt.Printf("Cancelled\n")
-			return
+		} else {
+			input := ""                                                                                                 //keyboard input value
+			fmt.Printf("SecurityGroup   %s   will be DESTROY, are you sure? (CAN NOT RESTORE) Y/N\n", listFlag.GroupId) //destroy warning
+			fmt.Scanln(&input)                                                                                          //stdin
+			if (input == "Y") || (input == "y") {                                                                       //input Y or y
+				regionsAWS := getAWSRegions() //get region list (AWS)
+				for _, region := range regionsAWS {
+					wg.Add(1) //waiting group count up
+					go destroySecurityGroup(region, &wg, stats)
+					time.Sleep(1 * time.Millisecond)
+				}
+				wg.Wait() //wait for end of parallel processing
+			} else { //not Y or y, exit
+				fmt.Printf("Cancelled\n")
+				return
+			}
 		}
 
 		printHitId(gid, stats)
@@ -54,6 +64,7 @@ Example:
 func init() {
 	aclCmd.AddCommand(acldestroyCmd)
 	acldestroyCmd.Flags().StringVarP(&listFlag.GroupId, "groupid", "", "", "security group-id") // define --groupid flag
+	acldestroyCmd.Flags().BoolVarP(&listFlag.Force, "force", "f", false, "Destroy without confirmation") //define -f --force flag
 }
 
 func destroySecurityGroup(region string, wg *sync.WaitGroup, stats map[string]int) {
