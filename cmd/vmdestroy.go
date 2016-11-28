@@ -17,7 +17,6 @@ var vmdestroyCmd = &cobra.Command{
 	Long:  "[DANGER]  Destroy VM  (CAN NOT RESTORE)",
 	Run: func(cmd *cobra.Command, args []string) {
 
-		var wg sync.WaitGroup     //parallel processing counter group
 		stats := map[string]int{} //instance id hit check map
 
 		for _, argid := range args { //create hit judgment map for character string set as argument
@@ -36,13 +35,7 @@ var vmdestroyCmd = &cobra.Command{
 		ids = strings.TrimRight(ids, ", ") //delete final comma
 
 		if listFlag.Force { //if there is enabled force option, dont confirmation
-			regionsAWS := getAWSRegions()
-			for _, region := range regionsAWS {
-				wg.Add(1)                                    //waiting group count up
-				go destroyInstance(args, region, &wg, stats) //destroy instance
-				time.Sleep(1 * time.Millisecond)             //
-			}
-			wg.Wait()
+			startParallelsDestroyInstance(args, stats)
 		} else {
 			input := ""                                                              //keyboard input value
 			fmt.Printf("Instance   %s   will be DESTROY, are you sure?  Y/N\n", ids) //destroy warning (pre)
@@ -51,13 +44,7 @@ var vmdestroyCmd = &cobra.Command{
 				fmt.Printf("This is final warning. DESTROY instance   %s   ARE YOU SURE? (Check EBS data)  Y/N\n", ids) //final destroy warning
 				fmt.Scanln(&input)                                                                                      //stdin
 				if (input == "Y") || (input == "y") {                                                                   //input Y or y (2 (final))
-					regionsAWS := getAWSRegions()
-					for _, region := range regionsAWS {
-						wg.Add(1)                                    //waiting group count up
-						go destroyInstance(args, region, &wg, stats) //destroy instance
-						time.Sleep(1 * time.Millisecond)             //
-					}
-					wg.Wait()
+					startParallelsDestroyInstance(args, stats)
 				} else { //not Y or y, exit
 					fmt.Printf("Cancelled\n")
 					return
@@ -76,6 +63,20 @@ var vmdestroyCmd = &cobra.Command{
 func init() {
 	vmCmd.AddCommand(vmdestroyCmd)
 	vmdestroyCmd.Flags().BoolVarP(&listFlag.Force, "force", "f", false, "Destroy without confirmation") //define -f --force flag
+}
+
+func startParallelsDestroyInstance(args []string, stats map[string]int) {
+
+	var wg sync.WaitGroup     //parallel processing counter group
+
+	regionsAWS := getAWSRegions()
+	for _, region := range regionsAWS {
+		wg.Add(1)                                    //waiting group count up
+		go destroyInstance(args, region, &wg, stats) //destroy instance
+		time.Sleep(1 * time.Millisecond)             //
+	}
+	wg.Wait()
+
 }
 
 func destroyInstance(target []string, region string, wg *sync.WaitGroup, stats map[string]int) {
