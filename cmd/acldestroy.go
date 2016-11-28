@@ -6,6 +6,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ec2"
 	"github.com/spf13/cobra"
+	"strings"
 	"sync"
 	"time"
 )
@@ -16,63 +17,84 @@ var acldestroyCmd = &cobra.Command{
 	Long: `destroy ACL (CAN NOT RESTORE)
 
 Example:
-  cq acl destroy --groupid sg-fd8cc1ee
+  cq acl destroy sg-fd8cc1ee
 `,
 	Run: func(cmd *cobra.Command, args []string) {
 
-		var wg sync.WaitGroup                //parallel processing counter group
-		var gid = []string{listFlag.GroupId} //group id for printHitId
-		stats := map[string]int{}            //group id hit check map
-		stats[listFlag.GroupId] = 0
+		stats := map[string]int{} //instance id hit check map
 
-		if checkGroupId() != "" { //flag check
-			fmt.Println(checkGroupId()) //if there is wrong, exit
+		for _, argid := range args { //create hit judgment map for character string set as argument
+			stats[argid] = 0 //init map (hit is 0)
+		}
+
+		if len(args) == 0 { //If there is no argument, abort
+			fmt.Printf("missing args (Instance-ID)\n")
 			return
 		}
 
-		input := ""                                                                                                 //keyboard input value
-		fmt.Printf("SecurityGroup   %s   will be DESTROY, are you sure? (CAN NOT RESTORE) Y/N\n", listFlag.GroupId) //destroy warning
-		fmt.Scanln(&input)                                                                                          //stdin
-		if (input == "Y") || (input == "y") {                                                                       //input Y or y
-			regionsAWS := getAWSRegions() //get region list (AWS)
-			for _, region := range regionsAWS {
-				wg.Add(1) //waiting group count up
-				go destroySecurityGroup(region, &wg, stats)
-				time.Sleep(1 * time.Millisecond)
+		ids := ""                      //keyboard input value
+		for _, inputid := range args { //translate comma spreaded (for warning print)
+			ids += inputid + ", "
+		}
+		ids = strings.TrimRight(ids, ", ") //delete final comma
+
+		if listFlag.Force { //if there is enabled force option, dont confirmation
+			startParallelsDestroySecurityGroup(args, stats)
+		} else {
+			input := ""                                                                                    //keyboard input value
+			fmt.Printf("SecurityGroup   %s   will be DESTROY, are you sure? (CAN NOT RESTORE) Y/N\n", ids) //destroy warning
+			fmt.Scanln(&input)                                                                             //stdin
+			if (input == "Y") || (input == "y") {                                                          //input Y or y
+				startParallelsDestroySecurityGroup(args, stats)
+			} else { //not Y or y, exit
+				fmt.Printf("Cancelled\n")
+				return
 			}
-			wg.Wait() //wait for end of parallel processing
-		} else { //not Y or y, exit
-			fmt.Printf("Cancelled\n")
-			return
 		}
 
-		printHitId(gid, stats)
+		printHitId(args, stats)
 
 	},
 }
 
 func init() {
 	aclCmd.AddCommand(acldestroyCmd)
-	acldestroyCmd.Flags().StringVarP(&listFlag.GroupId, "groupid", "", "", "security group-id") // define --groupid flag
+	acldestroyCmd.Flags().BoolVarP(&listFlag.Force, "force", "f", false, "Destroy without confirmation") //define -f --force flag
 }
 
-func destroySecurityGroup(region string, wg *sync.WaitGroup, stats map[string]int) {
+func startParallelsDestroySecurityGroup(args []string, stats map[string]int) {
+
+	var wg sync.WaitGroup     //parallel processing counter group
+
+	regionsAWS := getAWSRegions()
+	for _, region := range regionsAWS {
+		wg.Add(1)                                    //waiting group count up
+		go destroySecurityGroup(region, &wg, stats, args) //destroy instance
+		time.Sleep(1 * time.Millisecond)             //
+	}
+	wg.Wait()
+
+}
+
+func destroySecurityGroup(region string, wg *sync.WaitGroup, stats map[string]int, target []string) {
 
 	sgParamEC2 := getSecurityGroupParam(region) //get security group parameter
 
 	for _, SecurityGroups := range sgParamEC2.SecurityGroups {
-		if *SecurityGroups.GroupId == listFlag.GroupId {
-			stats[listFlag.GroupId]++                                                     //increment hit id counter
-			sginstance := ec2.New(session.New(), &aws.Config{Region: aws.String(region)}) //create ec2(security group) api-instance
-			_, err := sginstance.DeleteSecurityGroup(&ec2.DeleteSecurityGroupInput{       //execute security group destroy
-				GroupId: aws.String(listFlag.GroupId),
-			})
-			if err != nil { //if there got error, print it
-				fmt.Println(err)
-				wg.Done()
-				return
+		for _, iid := range target {
+			if *SecurityGroups.GroupId == iid {
+				stats[iid]++                                                                  //increment hit id counter
+				sginstance := ec2.New(session.New(), &aws.Config{Region: aws.String(region)}) //create ec2(security group) api-instance
+				_, err := sginstance.DeleteSecurityGroup(&ec2.DeleteSecurityGroupInput{       //execute security group destroy
+					GroupId: aws.String(iid),
+				})
+				if err != nil { //if there got error, print it
+					fmt.Println(err)
+					wg.Done()
+					return
+				}
+				fmt.Printf("Success!\n")
 			}
-			fmt.Printf("Success!\n")
 		}
 	}
 
