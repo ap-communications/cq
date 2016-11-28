@@ -35,27 +35,37 @@ var vmdestroyCmd = &cobra.Command{
 		}
 		ids = strings.TrimRight(ids, ", ") //delete final comma
 
-		input := ""                                                              //keyboard input value
-		fmt.Printf("Instance   %s   will be DESTROY, are you sure?  Y/N\n", ids) //destroy warning (pre)
-		fmt.Scanln(&input)                                                       //stdin
-		if (input == "Y") || (input == "y") {                                    //input Y or y (1)
-			fmt.Printf("This is final warning. DESTROY instance   %s   ARE YOU SURE? (Check EBS data)  Y/N\n", ids) //final destroy warning
-			fmt.Scanln(&input)                                                                                      //stdin
-			if (input == "Y") || (input == "y") {                                                                   //input Y or y (2 (final))
-				regionsAWS := getAWSRegions()
-				for _, region := range regionsAWS {
-					wg.Add(1)                                    //waiting group count up
-					go destroyInstance(args, region, &wg, stats) //destroy instance
-					time.Sleep(1 * time.Millisecond)             //
+		if listFlag.Force { //if there is enabled force option, dont confirmation
+			regionsAWS := getAWSRegions()
+			for _, region := range regionsAWS {
+				wg.Add(1)                                    //waiting group count up
+				go destroyInstance(args, region, &wg, stats) //destroy instance
+				time.Sleep(1 * time.Millisecond)             //
+			}
+			wg.Wait()
+		} else {
+			input := ""                                                              //keyboard input value
+			fmt.Printf("Instance   %s   will be DESTROY, are you sure?  Y/N\n", ids) //destroy warning (pre)
+			fmt.Scanln(&input)                                                       //stdin
+			if (input == "Y") || (input == "y") {                                    //input Y or y (1)
+				fmt.Printf("This is final warning. DESTROY instance   %s   ARE YOU SURE? (Check EBS data)  Y/N\n", ids) //final destroy warning
+				fmt.Scanln(&input)                                                                                      //stdin
+				if (input == "Y") || (input == "y") {                                                                   //input Y or y (2 (final))
+					regionsAWS := getAWSRegions()
+					for _, region := range regionsAWS {
+						wg.Add(1)                                    //waiting group count up
+						go destroyInstance(args, region, &wg, stats) //destroy instance
+						time.Sleep(1 * time.Millisecond)             //
+					}
+					wg.Wait()
+				} else { //not Y or y, exit
+					fmt.Printf("Cancelled\n")
+					return
 				}
-				wg.Wait()
 			} else { //not Y or y, exit
 				fmt.Printf("Cancelled\n")
 				return
 			}
-		} else { //not Y or y, exit
-			fmt.Printf("Cancelled\n")
-			return
 		}
 
 		printHitId(args, stats)
@@ -64,13 +74,8 @@ var vmdestroyCmd = &cobra.Command{
 }
 
 func init() {
-
-	USAGE := `Usage:
-  cq vm destroy [instance-id]
-`
-
 	vmCmd.AddCommand(vmdestroyCmd)
-	vmdestroyCmd.SetUsageTemplate(USAGE)
+	vmdestroyCmd.Flags().BoolVarP(&listFlag.Force, "force", "f", false, "Destroy without confirmation") //define -f --force flag
 }
 
 func destroyInstance(target []string, region string, wg *sync.WaitGroup, stats map[string]int) {
