@@ -20,7 +20,7 @@ var listFlag struct {
 	Region      string // --region
 	Type        string // --type
 	Keyname     string // --key
-	Force       bool // --force -f
+	Force       bool   // --force -f
 }
 
 //get region list (AWS)

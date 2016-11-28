@@ -6,9 +6,9 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ec2"
 	"github.com/spf13/cobra"
+	"strings"
 	"sync"
 	"time"
-	"strings"
 )
 
 var acldestroyCmd = &cobra.Command{
@@ -48,10 +48,10 @@ Example:
 			}
 			wg.Wait() //wait for end of parallel processing
 		} else {
-			input := ""                                                                                                 //keyboard input value
+			input := ""                                                                                    //keyboard input value
 			fmt.Printf("SecurityGroup   %s   will be DESTROY, are you sure? (CAN NOT RESTORE) Y/N\n", ids) //destroy warning
-			fmt.Scanln(&input)                                                                                          //stdin
-			if (input == "Y") || (input == "y") {                                                                       //input Y or y
+			fmt.Scanln(&input)                                                                             //stdin
+			if (input == "Y") || (input == "y") {                                                          //input Y or y
 				regionsAWS := getAWSRegions() //get region list (AWS)
 				for _, region := range regionsAWS {
 					wg.Add(1) //waiting group count up
@@ -82,7 +82,7 @@ func destroySecurityGroup(region string, wg *sync.WaitGroup, stats map[string]in
 	for _, SecurityGroups := range sgParamEC2.SecurityGroups {
 		for _, iid := range target {
 			if *SecurityGroups.GroupId == iid {
-				stats[iid]++                                                     //increment hit id counter
+				stats[iid]++                                                                  //increment hit id counter
 				sginstance := ec2.New(session.New(), &aws.Config{Region: aws.String(region)}) //create ec2(security group) api-instance
 				_, err := sginstance.DeleteSecurityGroup(&ec2.DeleteSecurityGroupInput{       //execute security group destroy
 					GroupId: aws.String(iid),
