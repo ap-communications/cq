@@ -1,12 +1,12 @@
 # cq
 [![release](https://img.shields.io/badge/release-1.0.0-blue.svg?style=flat-square)](https://github.com/ap-communications/cq/releases)
 [![license: Apache](https://img.shields.io/badge/license-Apache-blue.svg?style=flat-square)](LICENSE)
-* cq (cloud query) is tool for cloud environment control using simple lightweight CLI.
+* cq (cloud query) is a simple lightweight CLI tool for cloud environment control.
 
 
 # License
 Apache 2.0  
-(read ./LICENSE)
+(read [./LICENSE](./LICENSE))
 
 
 # Environment
@@ -40,15 +40,15 @@ Default output format [None]:       #There is no need to enter
 ```
 or
 * Attach IAM role
-  
-  
-* download binary from [release](https://github.com/ap-communications/cq/releases) and execute it :)
+
+
+* Download a binary from [release](https://github.com/ap-communications/cq/releases) and execute :)
 
 
 # Usage
 
 ## Command list
-* rader 
+* rader
   * vm
     * list
       * --delimiter -d <string>
@@ -283,8 +283,8 @@ SecurityGroup ID: sg-a2ed64cb
 
 # VS.
 * AWS CLI
-  * There is no need to aware of JSON
-  * There is no need to learn many subcommand and options
+  * There is no need to be aware of JSON
+  * There is no need to learn many subcommands and options
 * Management Console
   * Lightweight
   * Simple UI
