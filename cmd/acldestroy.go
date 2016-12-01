@@ -64,13 +64,13 @@ func init() {
 
 func startParallelsDestroySecurityGroup(args []string, stats map[string]int) {
 
-	var wg sync.WaitGroup     //parallel processing counter group
+	var wg sync.WaitGroup //parallel processing counter group
 
 	regionsAWS := getAWSRegions()
 	for _, region := range regionsAWS {
-		wg.Add(1)                                    //waiting group count up
+		wg.Add(1)                                         //waiting group count up
 		go destroySecurityGroup(region, &wg, stats, args) //destroy instance
-		time.Sleep(1 * time.Millisecond)             //
+		time.Sleep(1 * time.Millisecond)                  //
 	}
 	wg.Wait()
 
