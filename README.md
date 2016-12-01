@@ -295,4 +295,5 @@ SecurityGroup ID: sg-a2ed64cb
 
 
 # Author
-[Ryo Yamaoka](unite@ap-com.co.jp)
+Ryo Yamaoka
+unite@ap-com.co.jp
