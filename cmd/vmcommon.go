@@ -40,7 +40,8 @@ func getEC2Param(region string) *ec2.DescribeInstancesOutput {
 
 func createKey(region string) (string, string) {
 
-	name := "cq_" + time.Now().String()
+	oclock := time.Now().Format("2006-01-02_15:04:05")
+	name := "cq_" + oclock
 
 	ec2instance := ec2.New(session.New(), &aws.Config{Region: aws.String(region)}) //generate API query instance
 	resp, err := ec2instance.CreateKeyPair(&ec2.CreateKeyPairInput{

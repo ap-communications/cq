@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-var VERSION string = "cq version 0.8.1" //version info
+var VERSION string = "Cloud Query (cq)   version 1.0.0" //version info
 var cfgFile string
 
 var RootCmd = &cobra.Command{
