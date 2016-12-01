@@ -1,5 +1,5 @@
 # cq
-[![release](https://img.shields.io/badge/release-0.8.1-blue.svg?style=flat-square)](https://github.com/ap-communications/cq/releases)
+[![release](https://img.shields.io/badge/release-1.0.0-blue.svg?style=flat-square)](https://github.com/ap-communications/cq/releases)
 [![license: Apache](https://img.shields.io/badge/license-Apache-blue.svg?style=flat-square)](LICENSE)
 * cq (cloud query) is tool for cloud environment control using simple lightweight CLI.
 
@@ -80,8 +80,7 @@ or
       * --protocol [tcp, udp, icmp, any]
       * --port [portnumber, any]
       * --way [ingress or egress]
-    * destroy
-      * --groupid [securitygroup-id]
+    * destroy [securitygroup-ids]
 
 
 ## VM list (default)
