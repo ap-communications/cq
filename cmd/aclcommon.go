@@ -128,8 +128,8 @@ func translateSecurityGroupAddress(argAddress string) string {
 
 func createSecurityGroup(region string) string {
 
-	oclock := time.Now().Format("2006-01-02 15:04:05")
-	groupname := "temp sg (by cq)" + oclock
+	oclock := time.Now().Format("2006-01-02_15:04:05")
+	groupname := "cq_temporary_sg_" + oclock
 
 	ec2instance := ec2.New(session.New(), &aws.Config{Region: aws.String(region)}) //generate API query instance
 	resp, err := ec2instance.CreateSecurityGroup(&ec2.CreateSecurityGroupInput{
