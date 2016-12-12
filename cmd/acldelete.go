@@ -55,6 +55,8 @@ func init() {
 
 func deleteSecurityGroupRule(region string, wg *sync.WaitGroup, stats map[string]int) {
 
+	defer wg.Done()
+
 	sgParamEC2 := getSecurityGroupParam(region)                   //get security group parameter
 	port := translateSecurityGroupPort(listFlag.Port)             //translate input port number
 	protocol := translateSecurityGroupProtocol(listFlag.Protocol) //translate input protocol string
@@ -80,7 +82,6 @@ func deleteSecurityGroupRule(region string, wg *sync.WaitGroup, stats map[string
 				})
 				if err != nil { //if got error, print it
 					fmt.Println(err)
-					wg.Done()
 					return
 				}
 			} else if listFlag.Way == "egress" {
@@ -99,7 +100,6 @@ func deleteSecurityGroupRule(region string, wg *sync.WaitGroup, stats map[string
 				})
 				if err != nil { //if got error, print it
 					fmt.Println(err)
-					wg.Done()
 					return
 				}
 			}
@@ -107,7 +107,6 @@ func deleteSecurityGroupRule(region string, wg *sync.WaitGroup, stats map[string
 		}
 	}
 
-	wg.Done()
 	return
 
 }

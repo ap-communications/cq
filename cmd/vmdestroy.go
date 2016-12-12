@@ -81,6 +81,8 @@ func startParallelsDestroyInstance(args []string, stats map[string]int) {
 
 func destroyInstance(target []string, region string, wg *sync.WaitGroup, stats map[string]int) {
 
+	defer wg.Done()
+
 	instanceParamEC2 := getEC2Param(region)
 
 	for _, Reservations := range instanceParamEC2.Reservations {
@@ -100,7 +102,6 @@ func destroyInstance(target []string, region string, wg *sync.WaitGroup, stats m
 		}
 	}
 
-	wg.Done()
 	return
 
 }

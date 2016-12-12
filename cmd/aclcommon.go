@@ -12,6 +12,8 @@ import (
 
 func setSecurityGroupParam(region string, wg *sync.WaitGroup, sgParamEC2 *[]ec2.DescribeSecurityGroupsOutput) {
 
+	defer wg.Done()
+
 	sginstance := ec2.New(session.New(), &aws.Config{Region: aws.String(region)}) //generate API query instance
 	resp, err := sginstance.DescribeSecurityGroups(nil)                           //get instance information from API
 
@@ -23,7 +25,7 @@ func setSecurityGroupParam(region string, wg *sync.WaitGroup, sgParamEC2 *[]ec2.
 
 	*sgParamEC2 = append(*sgParamEC2, *resp) //set response data sgParamEC2 array
 
-	wg.Done()
+	return
 
 }
 

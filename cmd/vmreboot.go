@@ -53,6 +53,8 @@ func init() {
 
 func rebootInstance(target []string, region string, wg *sync.WaitGroup, stats map[string]int) {
 
+	defer wg.Done()
+
 	instanceParamEC2 := getEC2Param(region)
 
 	for _, Reservations := range instanceParamEC2.Reservations {
@@ -79,6 +81,5 @@ func rebootInstance(target []string, region string, wg *sync.WaitGroup, stats ma
 		}
 	}
 
-	wg.Done()
 	return
 }

@@ -84,6 +84,8 @@ func printRuleColumn(COLUMN string, w *tabwriter.Writer) {
 
 func printSecurityGroupRules(target []string, region string, wg *sync.WaitGroup, stats map[string]int, w *tabwriter.Writer, COLUMN string) {
 
+	defer wg.Done()
+
 	sgParamEC2 := getSecurityGroupParam(region)
 
 	for _, SecurityGroups := range sgParamEC2.SecurityGroups {
@@ -208,6 +210,6 @@ func printSecurityGroupRules(target []string, region string, wg *sync.WaitGroup,
 		}
 	}
 
-	wg.Done()
+	return
 
 }

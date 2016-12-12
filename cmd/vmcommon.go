@@ -11,6 +11,8 @@ import (
 
 func setEC2Param(region string, wg *sync.WaitGroup, instanceParamEC2 *[]ec2.DescribeInstancesOutput) {
 
+	defer wg.Done()
+
 	ec2instance := ec2.New(session.New(), &aws.Config{Region: aws.String(region)}) //generate API query instance
 	resp, err := ec2instance.DescribeInstances(nil)                                //get instance information from API
 
@@ -21,7 +23,7 @@ func setEC2Param(region string, wg *sync.WaitGroup, instanceParamEC2 *[]ec2.Desc
 
 	*instanceParamEC2 = append(*instanceParamEC2, *resp) //set response instanceParamEC2 array
 
-	wg.Done()
+	return
 
 }
 

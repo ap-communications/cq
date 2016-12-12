@@ -54,10 +54,11 @@ func init() {
 
 func restoreInstance(filepath string, wg *sync.WaitGroup, w *tabwriter.Writer) {
 
+	defer wg.Done()
+
 	file, err := ioutil.ReadFile(filepath)
 	if err != nil {
 		fmt.Println(err)
-		wg.Done()
 		return
 	}
 
@@ -65,7 +66,6 @@ func restoreInstance(filepath string, wg *sync.WaitGroup, w *tabwriter.Writer) {
 	unmarshalErr := json.Unmarshal([]byte(string(file)), &data)
 	if unmarshalErr != nil {
 		fmt.Println(err)
-		wg.Done()
 		return
 	}
 
@@ -106,7 +106,6 @@ func restoreInstance(filepath string, wg *sync.WaitGroup, w *tabwriter.Writer) {
 
 	if err != nil {
 		fmt.Println(err)
-		wg.Done()
 		return
 	}
 
@@ -115,7 +114,6 @@ func restoreInstance(filepath string, wg *sync.WaitGroup, w *tabwriter.Writer) {
 	fmt.Fprintf(w, "     Instance ID: %s\n", *checkedResp.Reservations[0].Instances[0].InstanceId)
 	fmt.Fprintf(w, "          Global: %s\n\n", *checkedResp.Reservations[0].Instances[0].PublicIpAddress)
 
-	wg.Done()
 	return
 
 }
