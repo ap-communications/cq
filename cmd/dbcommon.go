@@ -25,3 +25,16 @@ func setRDSParam(region string, wg *sync.WaitGroup, instanceParamRDS *[]rds.Desc
 	return
 
 }
+
+func getRDSParam(region string) *rds.DescribeDBInstancesOutput {
+
+	rdsInstance := rds.New(session.New(), &aws.Config{Region: aws.String(region)})
+	resp, err := rdsInstance.DescribeDBInstances(&rds.DescribeDBInstancesInput{})
+
+	if err != nil {
+		fmt.Println(err)
+		return nil
+	}
+
+	return resp
+}

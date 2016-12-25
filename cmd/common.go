@@ -23,6 +23,11 @@ var listFlag struct {
 	Force       bool   // --force -f
 }
 
+var dbFlag struct {
+	Failover bool // --failover
+}
+
+
 //get region list (AWS)
 func getAWSRegions() []string {
 
