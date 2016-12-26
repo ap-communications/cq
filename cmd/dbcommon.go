@@ -38,3 +38,21 @@ func getRDSParam(region string) *rds.DescribeDBInstancesOutput {
 
 	return resp
 }
+
+func setRDSSnapList(region string, wg *sync.WaitGroup, snapshotParamRDS *[]rds.DescribeDBSnapshotsOutput) {
+
+	defer wg.Done()
+
+	rdsInstance := rds.New(session.New(), &aws.Config{Region: aws.String(region)})
+	resp, err := rdsInstance.DescribeDBSnapshots(&rds.DescribeDBSnapshotsInput{})
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	*snapshotParamRDS = append(*snapshotParamRDS, *resp) //set response instanceParamEC2 array
+
+	return
+
+}

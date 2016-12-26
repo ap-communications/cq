@@ -24,7 +24,9 @@ var listFlag struct {
 }
 
 var dbFlag struct {
-	Failover bool // --failover
+	Failover   bool   // --failover
+	SnapshotID string // --snapshot-id
+	File       string // --file
 }
 
 //get region list (AWS)
