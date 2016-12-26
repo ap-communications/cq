@@ -6,15 +6,15 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/rds"
 	"github.com/spf13/cobra"
-	"sync"
 	"strings"
+	"sync"
 	"time"
 )
 
 var dbrebootCmd = &cobra.Command{
 	Use:   "reboot",
 	Short: "Reboot DB with failover (default)",
-	Long:  `Reboot DB with failover (default)
+	Long: `Reboot DB with failover (default)
 If you want to no failover reboot, must set failover flag at false
 
 
@@ -52,10 +52,10 @@ INFO:
 		if listFlag.Force { //if there is enabled force option, dont confirmation
 			//jump to reboot sequence
 		} else {
-			input := ""                                                              //keyboard input value
+			input := ""                                                       //keyboard input value
 			fmt.Printf("DB   %s   will be reboot, are you sure?  Y/N\n", ids) //destroy warning (pre)
-			fmt.Scanln(&input)                                                       //stdin
-			if (input == "Y") || (input == "y") {                                    //input Y or y
+			fmt.Scanln(&input)                                                //stdin
+			if (input == "Y") || (input == "y") {                             //input Y or y
 				//jump to reboot sequence
 			} else {
 				fmt.Printf("Cancelled\n")
@@ -78,7 +78,7 @@ INFO:
 
 func init() {
 	dbCmd.AddCommand(dbrebootCmd)
-	dbrebootCmd.Flags().BoolVarP(&dbFlag.Failover, "no-failover", "", false, "execute to no failover reboot (it will be take more DB down time)")                    // define --failover flag
+	dbrebootCmd.Flags().BoolVarP(&dbFlag.Failover, "no-failover", "", false, "execute to no failover reboot (it will be take more DB down time)") // define --failover flag
 }
 
 func rebootDBInstance(target []string, region string, wg *sync.WaitGroup, stats map[string]int) {
@@ -89,11 +89,11 @@ func rebootDBInstance(target []string, region string, wg *sync.WaitGroup, stats 
 	instanceParamRDS := getRDSParam(region)
 
 	/*
-	set no-failover flag status for AWS API (RebootDBInstance method is can set ForceFailover only. must be reverse dbFlag.Failover)
-		* RebootDBInstance method option
-			ForceFailover:  true = no-failover,   false = with-failover
-		* dbFlag.Failover
-			flag set: true,   not set: false
+		set no-failover flag status for AWS API (RebootDBInstance method is can set ForceFailover only. must be reverse dbFlag.Failover)
+			* RebootDBInstance method option
+				ForceFailover:  true = no-failover,   false = with-failover
+			* dbFlag.Failover
+				flag set: true,   not set: false
 	*/
 	if dbFlag.Failover {
 		failover = false
@@ -104,12 +104,12 @@ func rebootDBInstance(target []string, region string, wg *sync.WaitGroup, stats 
 	for _, DBInstances := range instanceParamRDS.DBInstances {
 		for _, dbid := range target {
 			if *DBInstances.DBInstanceIdentifier == dbid {
-				stats[dbid]++ //increment id hit counter
+				stats[dbid]++                                     //increment id hit counter
 				if *DBInstances.DBInstanceStatus == "available" { //if RDS instance state is "available" (coz: if instance state is not "available" can't be reboot)
 					rdsInstance := rds.New(session.New(), &aws.Config{Region: aws.String(region)})
 					_, err := rdsInstance.RebootDBInstance(&rds.RebootDBInstanceInput{
 						DBInstanceIdentifier: aws.String(dbid),
-						ForceFailover: aws.Bool(failover),
+						ForceFailover:        aws.Bool(failover),
 					})
 					if err != nil {
 						fmt.Println(err)

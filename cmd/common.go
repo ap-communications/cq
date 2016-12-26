@@ -27,7 +27,6 @@ var dbFlag struct {
 	Failover bool // --failover
 }
 
-
 //get region list (AWS)
 func getAWSRegions() []string {
 
