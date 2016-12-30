@@ -37,10 +37,10 @@ var dbdestroyCmd = &cobra.Command{
 		if listFlag.Force { //if there is enabled force option, dont confirmation
 			//jump to destroy sequence
 		} else {
-			input := ""                                                       //keyboard input value
+			input := ""                                                        //keyboard input value
 			fmt.Printf("DB   %s   will be destroy, are you sure?  Y/N\n", ids) //destroy warning (pre)
-			fmt.Scanln(&input)                                                //stdin
-			if (input == "Y") || (input == "y") {                             //input Y or y
+			fmt.Scanln(&input)                                                 //stdin
+			if (input == "Y") || (input == "y") {                              //input Y or y
 				fmt.Printf("This is final warning. DESTROY DB   %s   ARE YOU SURE?  Y/N\n", ids) //final destroy warning
 				fmt.Scanln(&input)                                                               //stdin
 				if (input == "Y") || (input == "y") {                                            //input Y or y (2 (final))
