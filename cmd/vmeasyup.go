@@ -70,13 +70,25 @@ func createInstance() {
 			aws.String(sgid),
 		},
 	})
-
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
 	checkedResp := checkInstanceCreated(region, *resp.Instances[0].InstanceId)
+
+	_, tagErr := ec2instance.CreateTags(&ec2.CreateTagsInput{
+		Resources: []*string{ aws.String(*resp.Instances[0].InstanceId) },
+		Tags: []*ec2.Tag{
+			{
+				Key: aws.String("Name"),
+				Value: aws.String("cq-easyup"),
+			},
+		},
+	})
+	if tagErr != nil {
+		fmt.Println(tagErr)
+	}
 
 	fmt.Printf("     Instance ID: %s\n", *checkedResp.Reservations[0].Instances[0].InstanceId)
 
