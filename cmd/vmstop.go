@@ -28,6 +28,20 @@ var vmstopCmd = &cobra.Command{
 			return
 		}
 
+		if listFlag.Force { //if there is enabled force option, dont confirmation
+			//jump to stop sequence
+		} else {
+			input := ""                                                              //keyboard input value
+			fmt.Printf("Instance   %s   will be stop, are you sure?  Y/N\n", args) //destroy warning (pre)
+			fmt.Scanln(&input)                                                       //stdin
+			if (input == "Y") || (input == "y") {                                    //input Y or y
+				//jump to stop sequence
+			} else {
+				fmt.Printf("Cancelled\n")
+				return
+			}
+		}
+
 		regionsAWS := getAWSRegions()
 		for _, region := range regionsAWS {
 			wg.Add(1) //waiting group count up
@@ -42,13 +56,8 @@ var vmstopCmd = &cobra.Command{
 }
 
 func init() {
-
-	USAGE := `Usage:
-  cq vm start [instance-id] [instance-id] ...
-`
-
 	vmCmd.AddCommand(vmstopCmd)
-	vmstopCmd.SetUsageTemplate(USAGE)
+	vmstopCmd.Flags().BoolVarP(&listFlag.Force, "force", "f", false, "Stop without confirmation") //define -f --force flag
 }
 
 func stopInstance(target []string, region string, wg *sync.WaitGroup, stats map[string]int) {
