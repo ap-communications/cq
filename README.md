@@ -316,7 +316,7 @@ test-db2        available       ap-northeast-1c         NULL                    
   AllocatedStorage: 20,
   AutoMinorVersionUpgrade: true,
   AvailabilityZone: "ap-northeast-1c",
-~~~~~~
+omission
   VpcSecurityGroups: [{
       Status: "active",
       VpcSecurityGroupId: "sg-a1234566"
