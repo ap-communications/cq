@@ -1,5 +1,5 @@
 # cq
-[![release](https://img.shields.io/badge/release-1.0.0-blue.svg?style=flat-square)](https://github.com/ap-communications/cq/releases)
+[![release](https://img.shields.io/badge/release-1.1.0-blue.svg?style=flat-square)](https://github.com/ap-communications/cq/releases)
 [![license: Apache](https://img.shields.io/badge/license-Apache-blue.svg?style=flat-square)](LICENSE)
 * cq (cloud query) is a simple lightweight CLI tool for cloud environment control.
 
@@ -56,8 +56,10 @@ or
     * inspect [instance-ids]
     * start [instance-ids]
     * stop [instance-ids]
+      * --force -f
     * restart [instance-ids]
     * destroy [instance-ids]
+      * --force -f
     * easyup
       * --groupid
       * --imageid
@@ -81,6 +83,25 @@ or
       * --port [portnumber, any]
       * --way [ingress or egress]
     * destroy [securitygroup-ids]
+  * db
+    * list
+      * --delimiter -d <string>
+    * snapshot
+    * snaplist
+      * --delimiter -d <string>
+    * snapdel [snapshot-ids]
+      * --force -f
+    * reboot [instance-ids]
+      * --force -f
+      * --no-failover
+    * inspect [instance-ids]
+    * backup [instance-ids]
+    * restore [snapshot-ids]
+      * --file [backup filename]
+      * --snapshot-id [snapshot-id]
+    * destroy [instance-ids]
+      * --force -f
+
 
 
 ## VM list (default)
@@ -278,6 +299,85 @@ SecurityGroup ID: sg-a2ed64cb
           Global: 52.199.118.117
          SSH Key: test-key
 
+```
+
+## DB list
+```
+[root@localhost ~]# cq db list
+DB-ID           STATE           AZ (Primary)            AZ (Secondary)          MULTI-AZ        PROVIDER
+test-db1        available       ap-northeast-1a         ap-northeast-1c         Yes             AWS
+test-db2        available       ap-northeast-1c         NULL                    No              AWS
+```
+
+## DB inspect
+```
+[root@localhost ~]# cq db inspect
+{
+  AllocatedStorage: 20,
+  AutoMinorVersionUpgrade: true,
+  AvailabilityZone: "ap-northeast-1c",
+~~~~~~
+  VpcSecurityGroups: [{
+      Status: "active",
+      VpcSecurityGroupId: "sg-a1234566"
+    }]
+}
+```
+
+## DB backup
+```
+[root@localhost ~]# cq db backup
+[ca@s266e cq]$ ./cq db backup test-db1
+backuped  test-db1.aws
+```
+
+## DB restore
+```
+[root@localhost ~]# cq db restore --file teest-db3.aws --snapshot-id cq-2017-01-10-12-57-45
+Enter DB name
+test-db3
+Started DB restore
+```
+
+## DB destroy
+```
+[root@localhost ~]# cq db destroy test-db3
+DB   test-db3   will be destroy, are you sure?  Y/N
+y
+This is final warning. DESTROY DB   test-db3   ARE YOU SURE?  Y/N
+y
+Success!   test-db3   destroyed
+```
+
+## DB reboot
+```
+[root@localhost ~]# cq db reboot test-db1
+DB   test-db1   will be reboot, are you sure?  Y/N
+y
+Success!   test-db1   has started reboot sequence
+```
+
+## DB snapdel
+```
+[root@localhost ~]# cq db snapdel test-db1-2017-01-10-12-57-45
+Snapshot   [test-db1-2017-01-10-12-57-45]   will be delete, are you sure?  Y/N
+y
+Success!   test-db1-2017-01-10-12-57-45   was deleted
+```
+
+## DB snaplist
+```
+[root@localhost ~]# cq db snaplist
+SNAPSHOT-ID                       DB-ID          ENGINE          AZ                      SIZE (GB)       Progress (%)
+rds:test-db1-db-2017-01-03-20-31  test-db1       mysql-5.6.27    ap-northeast-1a         50              100
+rds:test-db1-db-2017-01-04-20-31  test-db1       mysql-5.6.27    ap-northeast-1a         50              100
+rds:test-db1-db-2017-01-05-20-31  test-db1       mysql-5.6.27    ap-northeast-1a         50              100
+```
+
+## DB snapshot
+```
+[root@localhost ~]# cq db test-db1
+Success!   test-db1   has started take snapshot
 ```
 
 
