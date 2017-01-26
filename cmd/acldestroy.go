@@ -78,6 +78,8 @@ func startParallelsDestroySecurityGroup(args []string, stats map[string]int) {
 
 func destroySecurityGroup(region string, wg *sync.WaitGroup, stats map[string]int, target []string) {
 
+	defer wg.Done()
+
 	sgParamEC2 := getSecurityGroupParam(region) //get security group parameter
 
 	for _, SecurityGroups := range sgParamEC2.SecurityGroups {
@@ -90,7 +92,6 @@ func destroySecurityGroup(region string, wg *sync.WaitGroup, stats map[string]in
 				})
 				if err != nil { //if there got error, print it
 					fmt.Println(err)
-					wg.Done()
 					return
 				}
 				fmt.Printf("Success!\n")
@@ -98,7 +99,6 @@ func destroySecurityGroup(region string, wg *sync.WaitGroup, stats map[string]in
 		}
 	}
 
-	wg.Done()
 	return
 
 }
