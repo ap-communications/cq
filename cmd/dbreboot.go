@@ -78,6 +78,7 @@ INFO:
 
 func init() {
 	dbCmd.AddCommand(dbrebootCmd)
+	dbrebootCmd.Flags().BoolVarP(&listFlag.Force, "force", "f", false, "Delete without confirmation") //define -f --force flag
 	dbrebootCmd.Flags().BoolVarP(&dbFlag.Failover, "no-failover", "", false, "execute to no failover reboot (it will be take more DB down time)") // define --failover flag
 }
 
