@@ -48,7 +48,7 @@ or
 # Usage
 
 ## Command list
-* rader
+* cq
   * vm
     * list
       * --delimiter -d <string>
@@ -326,8 +326,7 @@ omission
 
 ## DB backup
 ```
-[root@localhost ~]# cq db backup
-[ca@s266e cq]$ ./cq db backup test-db1
+[root@localhost ~]# cq db backup test-db1
 backuped  test-db1.aws
 ```
 
@@ -387,7 +386,7 @@ Success!   test-db1   has started take snapshot
   * There is no need to learn many subcommands and options
 * Management Console
   * Lightweight
-  * Simple UI
+  * Simple UX
 
 
 # Thanks

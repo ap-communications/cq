@@ -1,0 +1,12 @@
+package: .
+import:
+- package: github.com/aws/aws-sdk-go
+  version: ^1.10.43
+  subpackages:
+  - aws
+  - aws/session
+  - service/ec2
+  - service/rds
+- package: github.com/spf13/cobra
+- package: github.com/spf13/viper
+  version: ^1.0.0
