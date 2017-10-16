@@ -1,8 +1,9 @@
 # cq
+[![CircleCI](https://circleci.com/gh/ap-communications/cq.svg?style=shield)](https://circleci.com/gh/ap-communications/cq)
 [![release](https://img.shields.io/badge/release-1.1.0-blue.svg?style=flat-square)](https://github.com/ap-communications/cq/releases)
 [![license: Apache](https://img.shields.io/badge/license-Apache-blue.svg?style=flat-square)](LICENSE)
-* cq (cloud query) is a simple lightweight CLI tool for cloud environment control.
 
+* cq (Cloud Query) is a simple lightweight CLI tool for cloud environment control.
 
 # License
 Apache 2.0  
@@ -61,7 +62,7 @@ or
     * destroy [instance-ids]
       * --force -f
     * easyup
-      * --groupid
+      * --group-id
       * --imageid
       * --key
       * --region
@@ -72,13 +73,13 @@ or
     * rule [securitygroup-ids]
     * add
       * --address [CIDR]
-      * --groupid [securitygroup-id]
+      * --group-id [securitygroup-id]
       * --protocol [tcp, udp, icmp, any]
       * --port [portnumber, any]
       * --way [ingress or egress]
     * delete
       * --address [CIDR]
-      * --groupid [securitygroup-id]
+      * --group-id [securitygroup-id]
       * --protocol [tcp, udp, icmp, any]
       * --port [portnumber, any]
       * --way [ingress or egress]
@@ -204,7 +205,7 @@ Egress          any             any                     0.0.0.0/0
 
 ## Add rule
 ```
-[root@localhost ~]# cq acl add --groupid sg-76b2ac12 --way ingress --protocol tcp --port 8080 --address 192.0.2.0/24
+[root@localhost ~]# cq acl add --group-id sg-76b2ac12 --way ingress --protocol tcp --port 8080 --address 192.0.2.0/24
 Success!
 
 [root@localhost ~]# cq acl rule sg-76b2ac12
@@ -218,7 +219,7 @@ Egress          any             any                     0.0.0.0/0
 
 ## Delete rule
 ```
-[root@localhost ~]# cq acl delete --groupid sg-76b2ac12 --way ingress --protocol tcp --port 8080 --address 192.0.2.0/24
+[root@localhost ~]# cq acl delete --group-id sg-76b2ac12 --way ingress --protocol tcp --port 8080 --address 192.0.2.0/24
 Success!
 
 [root@localhost ~]# cq acl rule sg-76b2ac12
@@ -292,7 +293,7 @@ xgskK8ZPmia3AVbmocNbX88lDavfpbMFGahoX07L7g1Sx59IWcRLSq94sWjpC8G1Yxom
 -----END RSA PRIVATE KEY-----
 
 
-[root@localhost ~]# cq vm easyup --groupid sg-a2ed64cb --imageid ami-0567c164 --key test-key --region ap-northeast-1 --type t2.nano
+[root@localhost ~]# cq vm easyup --group-id sg-a2ed64cb --imageid ami-0567c164 --key test-key --region ap-northeast-1 --type t2.nano
 ..
      Instance ID: i-4a1e6267
 SecurityGroup ID: sg-a2ed64cb
