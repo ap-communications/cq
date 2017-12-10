@@ -12,8 +12,26 @@ import (
 func List() {
 	w := tabwriter.NewWriter(os.Stdout, 0, 8, 2, '\t', 0)
 	printInstanceListColumn(w)
-	aws.PrintVmList(w, getColumn())
-	w.Flush()
+
+	awsCh := make(chan commons.InstanceList)
+	go aws.List(awsCh)
+
+	var awsList []commons.InstanceList
+	for {
+		select {
+		case awsInstance, ok := <-awsCh:
+			if ok {
+				awsList = append(awsList, awsInstance)
+			} else {
+				awsCh = nil
+				inject(w, awsList)
+			}
+		}
+		if awsCh == nil { // If there is all finished, print and return.
+			w.Flush()
+			return
+		}
+	}
 }
 
 func Start(args []string) {

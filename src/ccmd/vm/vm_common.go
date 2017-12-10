@@ -7,6 +7,22 @@ import (
 	"ccmd/commons"
 )
 
+func inject(w *tabwriter.Writer, instanceLists []commons.InstanceList) {
+	for _, l := range instanceLists {
+		fmt.Fprintf(
+			w,
+			getColumn(),
+			l.Tags,
+			l.InstanceId,
+			l.State,
+			l.PublicIpAddress,
+			l.PrivateIpAddress,
+			l.AvailabilityZone,
+			l.Provider,
+		)
+	}
+}
+
 func printInstanceListColumn(w *tabwriter.Writer) {
 	fmt.Fprintf(
 		w,

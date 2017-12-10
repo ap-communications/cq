@@ -3,10 +3,10 @@ package ccmd
 import (
 	"fmt"
 
+	"ccmd/commons"
+
 	"github.com/spf13/cobra"
 )
-
-const VERSION = "1.1.0"
 
 var versionCmd = &cobra.Command{
 	Use:   "version",
@@ -23,5 +23,5 @@ func init() {
 }
 
 func printVersion() {
-	fmt.Println("Cloud Query (cq)   version " + VERSION)
+	fmt.Println("Cloud Query (cq)   version " + commons.VERSION)
 }
