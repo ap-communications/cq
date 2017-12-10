@@ -7,7 +7,10 @@ import (
 	"github.com/aws/aws-sdk-go/service/ec2"
 )
 
-const DEFAULT_REGION = "ap-northeast-1"
+const (
+	DEFAULT_REGION = "ap-northeast-1"
+	VERSION        = "1.1.0"
+)
 
 var Flags struct {
 	VersionFlag bool   // --version -v
@@ -25,6 +28,16 @@ var Flags struct {
 	NoFailover  bool   // --no-failover
 	SnapshotId  string // --snapshot-id
 	FilePath    string // --file
+}
+
+type InstanceList struct {
+	Tags             string
+	InstanceId       string
+	State            string
+	PublicIpAddress  string
+	PrivateIpAddress string
+	AvailabilityZone string
+	Provider         string
 }
 
 // Get AWS regions list
