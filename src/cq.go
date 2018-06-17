@@ -1,6 +1,6 @@
 package main
 
-import "ccmd"
+import "github.com/ap-communications/cq/src/ccmd"
 
 func main() {
 	ccmd.Execute()

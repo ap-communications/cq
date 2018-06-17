@@ -1,8 +1,8 @@
 package ccmd
 
 import (
-	"ccmd/commons"
-	"ccmd/vm"
+	"github.com/ap-communications/cq/src/ccmd/commons"
+	"github.com/ap-communications/cq/src/ccmd/vm"
 
 	"github.com/spf13/cobra"
 )

@@ -6,7 +6,7 @@ import (
 	"os"
 	"sync"
 
-	"ccmd/commons"
+	"github.com/ap-communications/cq/src/ccmd/commons"
 )
 
 func BackupInstance(args []string) {

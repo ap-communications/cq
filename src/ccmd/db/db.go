@@ -4,7 +4,7 @@ import (
 	"os"
 	"text/tabwriter"
 
-	"ccmd/db/aws"
+	"github.com/ap-communications/cq/src/ccmd/db/aws"
 )
 
 var w = tabwriter.NewWriter(os.Stdout, 0, 8, 2, '\t', 0)

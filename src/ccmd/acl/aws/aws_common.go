@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"time"
 
-	"ccmd/commons"
+	"github.com/ap-communications/cq/src/ccmd/commons"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"

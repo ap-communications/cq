@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"text/tabwriter"
 
-	"ccmd/commons"
+	"github.com/ap-communications/cq/src/ccmd/commons"
 )
 
 func printDbListColumn(w *tabwriter.Writer) {
