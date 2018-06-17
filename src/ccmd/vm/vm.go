@@ -5,8 +5,8 @@ import (
 	"os"
 	"text/tabwriter"
 
-	"ccmd/commons"
-	"ccmd/vm/aws"
+	"github.com/ap-communications/cq/src/ccmd/commons"
+	"github.com/ap-communications/cq/src/ccmd/vm/aws"
 )
 
 func List() {

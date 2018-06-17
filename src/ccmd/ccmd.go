@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"ccmd/commons"
+	"github.com/ap-communications/cq/src/ccmd/commons"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"

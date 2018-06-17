@@ -1,8 +1,8 @@
 package ccmd
 
 import (
-	"ccmd/acl"
-	"ccmd/commons"
+	"github.com/ap-communications/cq/src/ccmd/acl"
+	"github.com/ap-communications/cq/src/ccmd/commons"
 
 	"github.com/spf13/cobra"
 )

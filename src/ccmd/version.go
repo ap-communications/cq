@@ -3,7 +3,7 @@ package ccmd
 import (
 	"fmt"
 
-	"ccmd/commons"
+	"github.com/ap-communications/cq/src/ccmd/commons"
 
 	"github.com/spf13/cobra"
 )

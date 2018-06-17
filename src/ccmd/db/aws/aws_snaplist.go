@@ -5,7 +5,7 @@ import (
 	"sync"
 	"text/tabwriter"
 
-	"ccmd/commons"
+	"github.com/ap-communications/cq/src/ccmd/commons"
 
 	"github.com/aws/aws-sdk-go/service/rds"
 )

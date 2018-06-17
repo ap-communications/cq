@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"sync"
 
-	"ccmd/commons"
+	"github.com/ap-communications/cq/src/ccmd/commons"
 )
 
 func Inspect(args []string) {
