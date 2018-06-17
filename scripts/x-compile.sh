@@ -1,44 +1,30 @@
 export GOOS=windows
 export GOARCH=amd64
-go build -o cq.exe ../
-zip cq-1.1-$GOOS-$GOARCH.zip cq.exe
-rm cq.exe
+go build -o cq-$GOOS-$GOARCH.exe src/cq.go
 
 export GOOS=windows
 export GOARCH=386
-go build -o cq.exe ../
-zip cq-1.1-$GOOS-$GOARCH.zip cq.exe
-rm cq.exe
+go build -o cq-$GOOS-$GOARCH.exe src/cq.go
 
 export GOOS=linux
 export GOARCH=amd64
-go build ../
-tar zcvf cq-1.1-$GOOS-$GOARCH.tar.gz cq
-rm cq
+go build -o cq-$GOOS-$GOARCH src/cq.go
 
 export GOOS=linux
 export GOARCH=386
-go build ../
-tar zcvf cq-1.1-$GOOS-$GOARCH.tar.gz cq
-rm cq
+go build -o cq-$GOOS-$GOARCH src/cq.go
 
 export GOOS=linux
 export GOARCH=arm
-go build ../
-tar zcvf cq-1.1-$GOOS-$GOARCH.tar.gz cq
-rm cq
+go build -o cq-$GOOS-$GOARCH src/cq.go
 
 export GOOS=darwin
 export GOARCH=amd64
-go build ../
-tar zcvf cq-1.1-$GOOS-$GOARCH.tar.gz cq
-rm cq
+go build -o cq-$GOOS-$GOARCH src/cq.go
 
 export GOOS=darwin
 export GOARCH=386
-go build ../
-tar zcvf cq-1.1-$GOOS-$GOARCH.tar.gz cq
-rm cq
+go build -o cq-$GOOS-$GOARCH src/cq.go
 
 unset GOOS
 unset GOARCH
