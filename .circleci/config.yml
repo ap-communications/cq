@@ -22,3 +22,39 @@ jobs:
       - run:
           name: Show version
           command: ./cq version
+  cross_compile:
+    working_directory: /home/circleci/src/github.com/ap-communications/cq
+    docker:
+      - image: circleci/golang:1.10.3
+        environment:
+          GOPATH: /home/circleci
+          INSTALL_DIRECTORY: /usr/bin # for dep install
+    steps:
+      - checkout
+      - run:
+          name: Install dep command
+          command: curl -s https://raw.githubusercontent.com/golang/dep/master/install.sh | sudo -E sh
+      - run:
+          name: Install dependency liblaries
+          command: dep ensure
+      - run:
+          name: Create artifacts directory
+          command: mkdir -p /tmp/artifacts
+      - run:
+          name: Cross compile
+          command: ./scripts/x-compile.sh && mv cq-* /tmp/artifacts
+      - store_artifacts:
+          path: /tmp/artifacts
+
+workflows:
+  version: 2
+  cloud_query:
+    jobs:
+      - build:
+          filters:
+            branches:
+              ignore: master
+      - cross_compile:
+          filters:
+            branches:
+              only: master
