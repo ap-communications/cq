@@ -9,7 +9,7 @@ import (
 
 const (
 	DEFAULT_REGION = "ap-northeast-1"
-	VERSION        = "1.1.0"
+	VERSION        = "1.1.1"
 )
 
 var Flags struct {

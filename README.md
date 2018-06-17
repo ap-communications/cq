@@ -1,6 +1,5 @@
 # cq
 [![CircleCI](https://circleci.com/gh/ap-communications/cq.svg?style=shield)](https://circleci.com/gh/ap-communications/cq)
-[![release](https://img.shields.io/badge/release-1.1.0-blue.svg?style=flat-square)](https://github.com/ap-communications/cq/releases)
 [![license: Apache](https://img.shields.io/badge/license-Apache-blue.svg?style=flat-square)](LICENSE)
 
 * cq (Cloud Query) is a simple lightweight CLI tool for cloud environment control.
