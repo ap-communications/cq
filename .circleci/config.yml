@@ -2,20 +2,20 @@ version: 2
 
 jobs:
   build:
+    working_directory: /home/circleci/src/github.com/ap-communications/cq
     docker:
-      - image: circleci/golang:1.9
+      - image: circleci/golang:1.10.3
         environment:
-          GOPATH: /home/circleci/github.com/ap-communications/cq
-          GO15VENDOREXPERIMENT: 1
-    working_directory: /home/circleci/github.com/ap-communications/cq
+          GOPATH: /home/circleci
+          INSTALL_DIRECTORY: /usr/bin # for dep install
     steps:
       - checkout
       - run:
-          name: Install glide command
-          command: sudo apt -y install golang-glide
+          name: Install dep command
+          command: curl -s https://raw.githubusercontent.com/golang/dep/master/install.sh | sudo -E sh
       - run:
-          name: Install dependencies library
-          command: cd src/ && glide install
+          name: Install dependency liblaries
+          command: dep ensure
       - run:
           name: Build
           command: go build src/cq.go
