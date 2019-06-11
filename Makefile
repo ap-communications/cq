@@ -4,8 +4,11 @@
 OS_LIST=windows linux darwin
 ARCH_LIST=amd64 386
 
+test: ## Run all test
+	@go test ./... -cover
+
 build: ## Build binary file
-	go build -o cq src/cq.go
+	@go build -o cq src/cq.go
 
 cross-compile: ## Build binaries for Windows, Linux, and macOS of x64 and x86
 	@mkdir bin
