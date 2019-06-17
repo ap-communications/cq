@@ -1,48 +1,52 @@
 version: 2
 
 jobs:
+
+  test:
+    working_directory: /go/src/github.com/ap-communications/cq
+    docker:
+      - image: circleci/golang:1.12.5
+        environment:
+          GOPATH: /go
+          GO111MODULE: "on"
+    steps:
+      - checkout
+      - restore_cache:
+          key: gomodules-{{ checksum "go.sum" }}
+      - run:
+          name: Install dependency libraries
+          command: go mod download
+      - run:
+          name: Run test
+          command: make test
+      - save_cache:
+          key: gomodules-{{ checksum "go.sum" }}
+          paths:
+            - /go/pkg/mod/
+
   build:
-    working_directory: /home/circleci/src/github.com/ap-communications/cq
+    working_directory: /go/src/github.com/ap-communications/cq
     docker:
-      - image: circleci/golang:1.10.3
+      - image: circleci/golang:1.12.5
         environment:
-          GOPATH: /home/circleci
-          INSTALL_DIRECTORY: /usr/bin # for dep install
+          GOPATH: /go
+          GO111MODULE: "on"
     steps:
       - checkout
+      - restore_cache:
+          key: gomodules-{{ checksum "go.sum" }}
       - run:
-          name: Install dep command
-          command: curl -s https://raw.githubusercontent.com/golang/dep/master/install.sh | sudo -E sh
+          name: Install dependency libraries
+          command: go mod download
       - run:
-          name: Install dependency liblaries
-          command: dep ensure
-      - run:
-          name: Build
-          command: go build src/cq.go
-      - run:
-          name: Show version
-          command: ./cq version
-  cross_compile:
-    working_directory: /home/circleci/src/github.com/ap-communications/cq
-    docker:
-      - image: circleci/golang:1.10.3
-        environment:
-          GOPATH: /home/circleci
-          INSTALL_DIRECTORY: /usr/bin # for dep install
-    steps:
-      - checkout
-      - run:
-          name: Install dep command
-          command: curl -s https://raw.githubusercontent.com/golang/dep/master/install.sh | sudo -E sh
-      - run:
-          name: Install dependency liblaries
-          command: dep ensure
+          name: Cross compile
+          command: make cross-compile
       - run:
           name: Create artifacts directory
           command: mkdir -p /tmp/artifacts
       - run:
-          name: Cross compile
-          command: ./scripts/x-compile.sh && mv cq-* /tmp/artifacts
+          name: Move binaries to artifacts directory
+          command: mv bin/* /tmp/artifacts
       - store_artifacts:
           path: /tmp/artifacts
 
@@ -50,11 +54,10 @@ workflows:
   version: 2
   cloud_query:
     jobs:
+      - test
       - build:
-          filters:
-            branches:
-              ignore: master
-      - cross_compile:
+          requires:
+            - test
           filters:
             branches:
               only: master
